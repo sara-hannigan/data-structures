@@ -1,0 +1,51 @@
+5
+5 loops
+
+Loop one:
+key[0] = ROOT, so this is the ROOT KEY
+key[0] = 4
+left[0] = 1 (index of LEFT child)
+right[0] = 2 (index of RIGHT child)
+
+Loop 2:
+key[1] = 2  (vertex 1 = 2 - so left child of 4 is 2)
+left[1] = 3 (Index of LEFT child of key1)
+right[1] = 4 (index of RIGHT child of key1)
+
+loop 3:
+key[2] = 5 (Vertex 2 = 5, so right child of 4 is 5)
+left[2] = null (no children for 5)
+right[2] = null (no children for 5)
+
+Loop 4:
+key[3] = 1 (vertex 3 = 1, so left child of key1(2) is 1)
+left[3] = null (no children for 3)
+right[3] = null (no children for 3) 
+
+Loop 5:
+key[4] = 3 (vertex 4 = 3, so right child of key1(2) is 3)
+left[4] = null
+right[4] = null
+
+
+Stored in arrays of key, left, right
+
+InOrderTraversal Pseudocode:
+If param is nill, returns
+Takes a root
+Goes down all the way to the left
+prints the root
+Then all the way down to the right
+
+PreOrderTraversal Pseudocode:
+If param is nill, returns
+Takes a root
+Prints the root
+Then goes down the left
+Then goes down the right
+
+postOrderTraversal Pseudocode:
+If param is nill, returns
+Goes all the way down the left
+Goes all the way down the right
+Prints the root
