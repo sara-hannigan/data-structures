@@ -20,13 +20,24 @@ struct Node {
   Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
 };
 
-bool inOrderTraversal(const vector<Node>& tree, int location) {
+bool inOrderTraversal(const vector<Node>& tree, int location, int prevLocation) {
 	if (location == -1) {
 		//cout << "Do I make it here before I break";
 		return true;
 	}
+	if (location == 0 && prevLocation == 0) {
+		inOrderTraversal(tree, tree[location].left, location);
+	}
+	if (!inOrderTraversal(tree, tree[location].left, location)) {
+		return false;
+	}
+	if (tree[prevLocation].key != -1 && tree[location].key <= tree[prevLocation].key) {
+		return false;
+	}
+
+	return inOrderTraversal(tree, tree[location].right, location);
 	//cout << "Left location " << tree[location].left;
-	int leftIndex = tree[location].left;
+	/*int leftIndex = tree[location].left;
 	if ((tree[leftIndex].key != -1) && (tree[location].key < tree[leftIndex].key)) {
 		return false;
 	}
@@ -35,13 +46,13 @@ bool inOrderTraversal(const vector<Node>& tree, int location) {
 		return false;
 	}
 	
-	return inOrderTraversal(tree, tree[location].left) and inOrderTraversal(tree, tree[location].right);
+	return inOrderTraversal(tree, tree[location].left) and inOrderTraversal(tree, tree[location].right);*/
 }
 
 bool IsBinarySearchTree(const vector<Node>& tree) {
 	bool results;
 	//cout << "Do I make it here \n";
-	results = inOrderTraversal(tree, 0);
+	results = inOrderTraversal(tree, 0, 0);
 	return results;
 }
 
