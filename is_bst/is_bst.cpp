@@ -16,22 +16,36 @@ struct Node {
 	Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
 };
 
-bool inOrderTraversal(const vector<Node>& tree, int location, int preVal) {
+bool inOrderTraversal(const vector<Node>& tree, int location, int preVal, int direction) {
 	if (location == -1) {
 		//cout << "Do I make it here before I break";
 		return true;
 	}
-	if ((preVal != -1) && (preVal != 0) && (tree[location].key < preVal)) {
-		return false;
+	if ((preVal != -1) && (preVal != 0)) {
+		if (direction == 0) {
+			if (tree[location].key > preVal) {
+				return false;
+			}
+			if (tree[location].key > tree[0].key) {
+				return false;
+			}
+		}
+		if (direction == 1) {
+			if (tree[location].key < preVal) {
+				return false;
+			}
+			if (tree[location].key < tree[0].key) {
+				return false;
+			}
+
+		}
 	}
-	int leftLocation = tree[location].left;
-	//cout << "Left location " << tree[location].left;
-	return inOrderTraversal(tree, tree[location].left, tree[location].key) and inOrderTraversal(tree, tree[location].right, tree[location].key);
+	return inOrderTraversal(tree, tree[location].left, tree[location].key, 0) and inOrderTraversal(tree, tree[location].right, tree[location].key, 1);
 }
 
 bool IsBinarySearchTree(const vector<Node>& tree) {
 	//cout << "Do I make it here \n";
-	bool results = inOrderTraversal(tree, 0, 0);
+	bool results = inOrderTraversal(tree, 0, 0, 0);
 	return results;
 	// Implement correct algorithm here
 	  //Probably recursion, 
