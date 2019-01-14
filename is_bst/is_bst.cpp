@@ -1,7 +1,11 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#if defined(__unix__) || defined(__APPLE__)
+#include <sys/resource.h>
+#endif
 
+using std::ios_base;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -16,48 +20,33 @@ struct Node {
   Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
 };
 
-vector<int> inOrderTraversal(const vector <int>&results, const vector<Node>& tree, int location) {
-	vector<int> answerResults = results;
+bool inOrderTraversal(const vector<Node>& tree, int location) {
 	if (location == -1) {
 		//cout << "Do I make it here before I break";
-		return answerResults;
+		return true;
 	}
 	//cout << "Left location " << tree[location].left;
-	vector<int> leftResults = inOrderTraversal(results, tree, tree[location].left);
-	answerResults.insert(answerResults.end(), leftResults.begin(), leftResults.end());
-	//cout << "Do I even make it here " << endl;
-	answerResults.push_back(tree[location].key);
-	vector<int> rightResults = inOrderTraversal(results, tree, tree[location].right);
-	answerResults.insert(answerResults.end(), rightResults.begin(), rightResults.end());
+	int leftIndex = tree[location].left;
+	if ((tree[leftIndex].key != -1) && (tree[location].key < tree[leftIndex].key)) {
+		return false;
+	}
+	int rightIndex = tree[location].right;
+	if ((tree[rightIndex].key != -1) && (tree[location].key > tree[rightIndex].key)) {
+		return false;
+	}
+	
+	return inOrderTraversal(tree, tree[location].left) and inOrderTraversal(tree, tree[location].right);
 }
 
 bool IsBinarySearchTree(const vector<Node>& tree) {
-	vector<int> results;
+	bool results;
 	//cout << "Do I make it here \n";
-	results = inOrderTraversal(results, tree, 0);
-	for (int i = 0; i < results.size(); ++i) {
-		//cout << results[i] << endl;
-		if (i + 1 < results.size()) {
-			if (results[i] > results[i + 1]) {
-				//cout << "smaller result " << results[i] << endl;
-				//cout << "larger result " << results[i + 1] << endl;
-				return false;
-			}
-		}
-	}
-  // Implement correct algorithm here
-	//Probably recursion, 
-	//set to return false any time the nodes are larger on the left or smaller on the right
-	//Check if left val smaller than current val, then recurse down
-	//Do opposite for right
-	//save a max and a min value?....is that necessary?
-	//I feel like left/right should just always be smaller or larger
-	//keep in mind equal conditions, node should be on the right
-	//OR consider an in-order traversal?
-	return true;
+	results = inOrderTraversal(tree, 0);
+	return results;
 }
 
-int main() {
+int main_with_large_stack_space() {
+	ios_base::sync_with_stdio(0);
   int nodes;
   cin >> nodes;
   if (nodes == 0) {
@@ -77,3 +66,29 @@ int main() {
   }
   return 0;
 }
+
+int main(int argc, char **argv) {
+#if defined(__unix__) || defined(__APPLE__)
+	// Allow larger stack space
+	const rlim_t kStackSize = 16 * 1024 * 1024;   // min stack size = 16 MB
+	struct rlimit rl;
+	int result;
+
+	result = getrlimit(RLIMIT_STACK, &rl);
+	if (result == 0)
+	{
+		if (rl.rlim_cur < kStackSize)
+		{
+			rl.rlim_cur = kStackSize;
+			result = setrlimit(RLIMIT_STACK, &rl);
+			if (result != 0)
+			{
+				std::cerr << "setrlimit returned result = " << result << std::endl;
+			}
+		}
+	}
+#endif
+
+	return main_with_large_stack_space();
+}
+
