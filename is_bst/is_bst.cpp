@@ -17,24 +17,32 @@ struct Node {
 };
 
 bool inOrderTraversal(const vector<Node>& tree, int location, int preVal, int direction) {
+	// Location = index
+	//Direction 0 is left
+	//Direction 1 is right
 	if (location == -1) {
 		//cout << "Do I make it here before I break";
 		return true;
 	}
+	cout << "Current value of node is " << tree[location].key << endl;
 	if ((preVal != -1) && (preVal != 0)) {
 		if (direction == 0) {
-			if (tree[location].key > preVal) {
+			if (tree[location].key >= preVal) {
+				cout << "Left and key is greater than the previous value" << tree[location].key << " " << preVal << endl;
 				return false;
 			}
 			if (tree[location].key > tree[0].key) {
+				cout << "Left and key is greater than the root" << tree[location].key << " " << tree[0].key << endl;
 				return false;
 			}
 		}
 		if (direction == 1) {
 			if (tree[location].key < preVal) {
+				cout << "Right and key is less than the previous val " << tree[location].key << " " << preVal << endl;
 				return false;
 			}
 			if (tree[location].key < tree[0].key) {
+				cout << "Right and key is greater than the root" << tree[location].key << " " << tree[0].key << endl;
 				return false;
 			}
 
