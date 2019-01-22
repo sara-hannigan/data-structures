@@ -1,7 +1,11 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#if defined(__unix__) || defined(__APPLE__)
+#include <sys/resource.h>
+#endif
 
+using std::ios_base;
 using std::cin;
 using std::cout;
 using std::endl;
@@ -51,23 +55,20 @@ public:
 				}
 			}
 		}
-		//if (answerResults.size() > 0) {
-		//	cout << "Back of answerResults is " << answerResults.back() << endl;
-		//	if (tree[location].key > answerResults.back()) {
-		//		cout << "Key in breaking point is " << tree[location].key << endl;
-		//		return false;
-		//	}
-
-		//}
+		if (answerResults.size() > 0) {
+			if (tree[location].key <= answerResults.back()) {
+				return false;
+			}
+		}
 		answerResults.push_back(tree[location].key);
 		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		inOrderTraversal(tree, tree[location].left);
 		//cout << "Right location " << tree[location].right << endl;
 		long rightLocation = tree[location].right;
-		if (rightLocation !=-1) {
-				if (tree[rightLocation].key < tree[location].key) {
-					return false;
-				}
+		if (rightLocation != -1) {
+			if (tree[rightLocation].key < tree[location].key) {
+				return false;
+			}
 		}
 		if (tree[location].key < answerResults.back()) {
 			//cout << "I really shouldn't be here either" << endl;
@@ -77,14 +78,13 @@ public:
 			return false;
 		}
 		inOrderTraversal(tree, tree[location].right);
-		}
 
 		//if (answerResults.back()) {
 		//	if (tree[rightLocation].key < answerResults.back()) {
-		//		cout << "Do I even make it here 4" << endl;
 		//		return false;
 		//	}
 		//}
+	}
 
 };
 
@@ -114,23 +114,50 @@ bool IsBinarySearchTree(const vector<Node>& tree) {
 	return true;
 }
 
-int main() {
-  int nodes;
-  cin >> nodes;
-  if (nodes == 0) {
-	  cout << "CORRECT" << endl;
-	  return 0;
-  }
-  vector<Node> tree;
-  for (int i = 0; i < nodes; ++i) {
-    int key, left, right;
-    cin >> key >> left >> right;
-    tree.push_back(Node(key, left, right));
-  }
-  if (IsBinarySearchTree(tree)) {
-    cout << "CORRECT" << endl;
-  } else {
-    cout << "INCORRECT" << endl;
-  }
-  return 0;
+int main_with_large_stack_space() {
+	ios_base::sync_with_stdio(0);
+	int nodes;
+	cin >> nodes;
+	if (nodes == 0) {
+		cout << "CORRECT" << endl;
+		return 0;
+	}
+	vector<Node> tree;
+	for (int i = 0; i < nodes; ++i) {
+		int key, left, right;
+		cin >> key >> left >> right;
+		tree.push_back(Node(key, left, right));
+	}
+	if (IsBinarySearchTree(tree)) {
+		cout << "CORRECT" << endl;
+	}
+	else {
+		cout << "INCORRECT" << endl;
+	}
+	return 0;
+}
+int main(int argc, char **argv)
+{
+#if defined(__unix__) || defined(__APPLE__)
+	// Allow larger stack space
+	const rlim_t kStackSize = 16 * 1024 * 1024;   // min stack size = 16 MB
+	struct rlimit rl;
+	int result;
+
+	result = getrlimit(RLIMIT_STACK, &rl);
+	if (result == 0)
+	{
+		if (rl.rlim_cur < kStackSize)
+		{
+			rl.rlim_cur = kStackSize;
+			result = setrlimit(RLIMIT_STACK, &rl);
+			if (result != 0)
+			{
+				std::cerr << "setrlimit returned result = " << result << std::endl;
+			}
+		}
+	}
+#endif
+
+	return main_with_large_stack_space();
 }
