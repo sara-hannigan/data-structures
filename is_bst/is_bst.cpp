@@ -8,12 +8,12 @@ using std::endl;
 using std::vector;
 
 struct Node {
-  int key;
-  int left;
-  int right;
+  long key;
+  long left;
+  long right;
 
   Node() : key(0), left(-1), right(-1) {}
-  Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
+  Node(long key_, long left_, long right_) : key(key_), left(left_), right(right_) {}
 };
 //
 //int traversalHelper(const vector<Node>& tree, int location) {
@@ -29,27 +29,24 @@ struct Node {
 
 class traversal {
 private:
-	vector<int> answerResults;
+	vector<long> answerResults;
 
 public:
-	bool inOrderTraversal(const vector<Node>& tree, int location) {
+	bool inOrderTraversal(const vector<Node>& tree, long location) {
 		if (location == -1) {
 			return true;
 		}
-		int leftLocation = tree[location].left;
+		long leftLocation = tree[location].left;
 		//cout << "Left location is " << leftLocation << endl;
 		//cout << "Key is " << tree[location].key << endl;
 		if (leftLocation != -1) {
 			//cout << "Key in left location is " << tree[leftLocation].key << endl;
+			if (tree[location].key <= tree[leftLocation].key) {
+				//cout << "left key is " << tree[leftLocation].key << endl;
+				return false;
+			}
 			if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
 				if (tree[location].key >= tree[leftLocation].key) {
-					//cout << "left key is " << tree[leftLocation].key << endl;
-					return false;
-				}
-			}
-			else {
-				if (tree[location].key < tree[leftLocation].key) {
-					//cout << "left key is " << tree[leftLocation].key << endl;
 					return false;
 				}
 			}
@@ -57,7 +54,7 @@ public:
 		//if (answerResults.size() > 0) {
 		//	cout << "Back of answerResults is " << answerResults.back() << endl;
 		//	if (tree[location].key > answerResults.back()) {
-				//cout << "Key in breaking point is " << tree[location].key << endl;
+		//		cout << "Key in breaking point is " << tree[location].key << endl;
 		//		return false;
 		//	}
 
@@ -66,22 +63,11 @@ public:
 		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		inOrderTraversal(tree, tree[location].left);
 		//cout << "Right location " << tree[location].right << endl;
-		int rightLocation = tree[location].right;
+		long rightLocation = tree[location].right;
 		if (rightLocation !=-1) {
-			if ((tree[location].key < 0) && (tree[rightLocation].key < 0)) {
-				if (tree[location].key >= tree[rightLocation].key) {
-					//cout << "left key is " << tree[leftLocation].key << endl;
-					return false;
-				}
-			}
-			else {
 				if (tree[rightLocation].key < tree[location].key) {
-					//cout << "Key in right location is " << tree[rightLocation].key << endl;
-					//cout << "I really shouldn't be here" << endl;
-					//cout << "left key is " << tree[leftLocation].key << endl;
 					return false;
 				}
-			}
 		}
 		if (tree[location].key < answerResults.back()) {
 			//cout << "I really shouldn't be here either" << endl;
