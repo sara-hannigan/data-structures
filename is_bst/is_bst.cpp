@@ -8,12 +8,12 @@ using std::endl;
 using std::vector;
 
 struct Node {
-	int key;
-	int left;
-	int right;
+  int key;
+  int left;
+  int right;
 
-	Node() : key(0), left(-1), right(-1) {}
-	Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
+  Node() : key(0), left(-1), right(-1) {}
+  Node(int key_, int left_, int right_) : key(key_), left(left_), right(right_) {}
 };
 //
 //int traversalHelper(const vector<Node>& tree, int location) {
@@ -33,37 +33,64 @@ private:
 
 public:
 	bool inOrderTraversal(const vector<Node>& tree, int location) {
-		//cout << "Key is " << tree[location].key << endl;
 		if (location == -1) {
 			return true;
 		}
 		int leftLocation = tree[location].left;
+		//cout << "Left location is " << leftLocation << endl;
+		//cout << "Key is " << tree[location].key << endl;
 		if (leftLocation != -1) {
-			if (tree[leftLocation].key >= tree[location].key) {
-				//cout << "left key is " << tree[leftLocation].key << endl;
-				return false;
+			//cout << "Key in left location is " << tree[leftLocation].key << endl;
+			if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
+				if (tree[location].key >= tree[leftLocation].key) {
+					//cout << "left key is " << tree[leftLocation].key << endl;
+					return false;
+				}
+			}
+			else {
+				if (tree[location].key < tree[leftLocation].key) {
+					//cout << "left key is " << tree[leftLocation].key << endl;
+					return false;
+				}
 			}
 		}
 		//if (answerResults.size() > 0) {
 		//	cout << "Back of answerResults is " << answerResults.back() << endl;
 		//	if (tree[location].key > answerResults.back()) {
-		//		cout << "Key in breaking point is " << tree[location].key << endl;
+				//cout << "Key in breaking point is " << tree[location].key << endl;
 		//		return false;
 		//	}
 
 		//}
 		answerResults.push_back(tree[location].key);
+		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		inOrderTraversal(tree, tree[location].left);
-		//cout << "Right location " << tree[location].right;
+		//cout << "Right location " << tree[location].right << endl;
 		int rightLocation = tree[location].right;
+		if (rightLocation !=-1) {
+			if ((tree[location].key < 0) && (tree[rightLocation].key < 0)) {
+				if (tree[location].key >= tree[rightLocation].key) {
+					//cout << "left key is " << tree[leftLocation].key << endl;
+					return false;
+				}
+			}
+			else {
+				if (tree[rightLocation].key < tree[location].key) {
+					//cout << "Key in right location is " << tree[rightLocation].key << endl;
+					//cout << "I really shouldn't be here" << endl;
+					//cout << "left key is " << tree[leftLocation].key << endl;
+					return false;
+				}
+			}
+		}
 		if (tree[location].key < answerResults.back()) {
+			//cout << "I really shouldn't be here either" << endl;
 			//cout << "Back of answerResults is " << answerResults.back() << endl;
 			//cout << "Key in breaking point is " << tree[location].key << endl;
 			//cout << "Do I even make it here 3" << endl;
 			return false;
 		}
-		else {
-			inOrderTraversal(tree, tree[location].right);
+		inOrderTraversal(tree, tree[location].right);
 		}
 
 		//if (answerResults.back()) {
@@ -72,7 +99,6 @@ public:
 		//		return false;
 		//	}
 		//}
-	}
 
 };
 
@@ -103,23 +129,22 @@ bool IsBinarySearchTree(const vector<Node>& tree) {
 }
 
 int main() {
-	int nodes;
-	cin >> nodes;
-	if (nodes == 0) {
-		cout << "CORRECT" << endl;
-		return 0;
-	}
-	vector<Node> tree;
-	for (int i = 0; i < nodes; ++i) {
-		int key, left, right;
-		cin >> key >> left >> right;
-		tree.push_back(Node(key, left, right));
-	}
-	if (IsBinarySearchTree(tree)) {
-		cout << "CORRECT" << endl;
-	}
-	else {
-		cout << "INCORRECT" << endl;
-	}
-	return 0;
+  int nodes;
+  cin >> nodes;
+  if (nodes == 0) {
+	  cout << "CORRECT" << endl;
+	  return 0;
+  }
+  vector<Node> tree;
+  for (int i = 0; i < nodes; ++i) {
+    int key, left, right;
+    cin >> key >> left >> right;
+    tree.push_back(Node(key, left, right));
+  }
+  if (IsBinarySearchTree(tree)) {
+    cout << "CORRECT" << endl;
+  } else {
+    cout << "INCORRECT" << endl;
+  }
+  return 0;
 }
