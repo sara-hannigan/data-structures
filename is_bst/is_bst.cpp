@@ -34,6 +34,7 @@ struct Node {
 class traversal {
 private:
 	vector<long> answerResults;
+	long root;
 
 public:
 	bool inOrderTraversal(const vector<Node>& tree, long location) {
@@ -45,39 +46,51 @@ public:
 		//cout << "Key is " << tree[location].key << endl;
 		if (leftLocation != -1) {
 			//cout << "Key in left location is " << tree[leftLocation].key << endl;
-			if (tree[location].key <= tree[leftLocation].key) {
-				//cout << "left key is " << tree[leftLocation].key << endl;
-				return false;
-			}
 			if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
 				if (tree[location].key >= tree[leftLocation].key) {
 					return false;
 				}
 			}
-		}
-		if (answerResults.size() > 0) {
-			if (tree[location].key <= answerResults.back()) {
+			if (tree[location].key <= tree[leftLocation].key) {
+				//cout << "Tree key is " << tree[location].key << " and left location is " << tree[leftLocation].key;
+				//cout << "i break in wrong location 1" << endl;
 				return false;
+			}
+			if (tree[tree[leftLocation].right].key > tree[0].key) {
+				return false;
+			}
+			if (answerResults.size() > 0) {
+				if (tree[leftLocation].key >= answerResults.back()) {
+					/*cout << "i break in wrong location 2" << endl;
+					cout << "Tree key is " << tree[leftLocation].key << " and answer resutls are " << answerResults.back();*/
+					return false;
+				}
 			}
 		}
 		answerResults.push_back(tree[location].key);
-		//cout << "Back of answerResults is " << answerResults.back() << endl;
+		cout << "Answer results are " << answerResults.back() << endl;
 		inOrderTraversal(tree, tree[location].left);
+		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		//cout << "Right location " << tree[location].right << endl;
 		long rightLocation = tree[location].right;
 		if (rightLocation != -1) {
-			if (tree[rightLocation].key < tree[location].key) {
+			if (tree[location].key > tree[rightLocation].key) {
+				//cout << "i break in wrong location 3" << endl;
+				return false;
+			}
+			if (tree[location].key < answerResults.back()) {
+				//cout << "i break in wrong location 4" << endl;
+				//cout << "I really shouldn't be here either" << endl;
+				//cout << "Back of answerResults is " << answerResults.back() << endl;
+				//cout << "Key in breaking point is " << tree[location].key << endl;
+				//cout << "Do I even make it here 3" << endl;
+				return false;
+			}
+			if (tree[tree[rightLocation].left].key <= tree[0].key) {
 				return false;
 			}
 		}
-		if (tree[location].key < answerResults.back()) {
-			//cout << "I really shouldn't be here either" << endl;
-			//cout << "Back of answerResults is " << answerResults.back() << endl;
-			//cout << "Key in breaking point is " << tree[location].key << endl;
-			//cout << "Do I even make it here 3" << endl;
-			return false;
-		}
-		inOrderTraversal(tree, tree[location].right);
+		return inOrderTraversal(tree, tree[location].right);
 
 		//if (answerResults.back()) {
 		//	if (tree[rightLocation].key < answerResults.back()) {
@@ -91,6 +104,8 @@ public:
 bool IsBinarySearchTree(const vector<Node>& tree) {
 	traversal inOrder;
 	bool results;
+	long min = tree[0].key;
+	long max = tree[0].key;
 	results = inOrder.inOrderTraversal(tree, 0);
 	return results;
 	//for (int i = 0; i < results.size(); ++i) {
