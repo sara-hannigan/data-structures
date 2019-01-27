@@ -41,6 +41,7 @@ public:
 		if (location == -1) {
 			return true;
 		}
+		answerResults.push_back(tree[location].key);
 		long leftLocation = tree[location].left;
 		//cout << "Left location is " << leftLocation << endl;
 		//cout << "Key is " << tree[location].key << endl;
@@ -48,6 +49,7 @@ public:
 			//cout << "Key in left location is " << tree[leftLocation].key << endl;
 			if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
 				if (tree[location].key >= tree[leftLocation].key) {
+					//cout << "I break in the wrong location 0" << endl;
 					return false;
 				}
 			}
@@ -57,41 +59,44 @@ public:
 				return false;
 			}
 			if (tree[tree[leftLocation].right].key > tree[0].key) {
+				//cout << "I'm guessing I broke here" << endl;
 				return false;
 			}
-			if (answerResults.size() > 0) {
-				if (tree[leftLocation].key >= answerResults.back()) {
-					/*cout << "i break in wrong location 2" << endl;
-					cout << "Tree key is " << tree[leftLocation].key << " and answer resutls are " << answerResults.back();*/
-					return false;
-				}
-			}
-		}
-		answerResults.push_back(tree[location].key);
-		cout << "Answer results are " << answerResults.back() << endl;
-		inOrderTraversal(tree, tree[location].left);
+			//if (answerResults.size() > 0) {
+			//	if (tree[leftLocation].key >= answerResults.back()) {
+			//		cout << "i break in wrong location 2" << endl;
+			//		cout << "Tree key is " << tree[leftLocation].key << " and answer resutls are " << answerResults.back();
+			//		return false;
+			//	}
+			//}
+		};
+		//inOrderTraversal(tree, tree[location].left);
+		//cout << "Answer results are " << answerResults.back() << endl;
 		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		//cout << "Right location " << tree[location].right << endl;
+		//inOrderTraversal(tree, tree[location].right);
 		long rightLocation = tree[location].right;
 		if (rightLocation != -1) {
 			if (tree[location].key > tree[rightLocation].key) {
 				//cout << "i break in wrong location 3" << endl;
 				return false;
 			}
-			if (tree[location].key < answerResults.back()) {
-				//cout << "i break in wrong location 4" << endl;
-				//cout << "I really shouldn't be here either" << endl;
-				//cout << "Back of answerResults is " << answerResults.back() << endl;
-				//cout << "Key in breaking point is " << tree[location].key << endl;
-				//cout << "Do I even make it here 3" << endl;
-				return false;
-			}
-			if (tree[tree[rightLocation].left].key <= tree[0].key) {
-				return false;
+			//if (tree[location].key < answerResults.back()) {
+			//	cout << "i break in wrong location 4" << endl;
+			//	//cout << "I really shouldn't be here either" << endl;
+			//	cout << "Back of answerResults is " << answerResults.back() << endl;
+			//	cout << "Key in breaking point is " << tree[location].key << endl;
+			//	//cout << "Do I even make it here 3" << endl;
+			//	return false;
+			//}
+			if (tree[rightLocation].left != -1) {
+				if (tree[tree[rightLocation].left].key <= tree[0].key) {
+					//cout << "I break in wrong location 5" << endl;
+					return false;
+				}
 			}
 		}
-		return inOrderTraversal(tree, tree[location].right);
-
+		return inOrderTraversal(tree, tree[location].left) and inOrderTraversal(tree, tree[location].right);
 		//if (answerResults.back()) {
 		//	if (tree[rightLocation].key < answerResults.back()) {
 		//		return false;
