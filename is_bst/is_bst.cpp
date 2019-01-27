@@ -33,7 +33,7 @@ struct Node {
 
 class traversal {
 private:
-	vector<long> answerResults;
+	vector<Node> answerResults;
 	long root;
 
 public:
@@ -41,27 +41,31 @@ public:
 		if (location == -1) {
 			return true;
 		}
-		answerResults.push_back(tree[location].key);
-		long leftLocation = tree[location].left;
-		//cout << "Left location is " << leftLocation << endl;
-		//cout << "Key is " << tree[location].key << endl;
-		if (leftLocation != -1) {
-			//cout << "Key in left location is " << tree[leftLocation].key << endl;
-			if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
-				if (tree[location].key >= tree[leftLocation].key) {
-					//cout << "I break in the wrong location 0" << endl;
-					return false;
-				}
-			}
-			if (tree[location].key <= tree[leftLocation].key) {
-				//cout << "Tree key is " << tree[location].key << " and left location is " << tree[leftLocation].key;
-				//cout << "i break in wrong location 1" << endl;
-				return false;
-			}
-			if (tree[tree[leftLocation].right].key > tree[0].key) {
-				//cout << "I'm guessing I broke here" << endl;
-				return false;
-			}
+		//long leftLocation = tree[location].left;
+/*		cout << "Left location is " << leftLocation << endl;
+		cout << "Key is " << tree[location].key << endl*/;
+		//if (leftLocation != -1) {
+		//	//cout << "Key in left location is " << tree[leftLocation].key << endl;
+		//	if ((tree[location].key < 0) && (tree[leftLocation].key < 0)) {
+		//		if (tree[location].key >= tree[leftLocation].key) {
+		//			//cout << "I break in the wrong location 0" << endl;
+		//			return false;
+		//		}
+		//	}
+		//	if (tree[location].key <= tree[leftLocation].key) {
+		//		//cout << "Tree key is " << tree[location].key << " and left location is " << tree[leftLocation].key;
+		//		//cout << "i break in wrong location 1" << endl;
+		//		return false;
+		//	}
+		//	if (tree[leftLocation].right != -1) {
+		//		//cout << "Nobody loves me" << endl;
+		//		//cout << tree[tree[leftLocation].right].key << endl;
+		//		//cout << "Root " << tree[0].key << endl;
+		//		if (tree[tree[leftLocation].right].key > tree[0].key) {
+		//			//cout << "I'm guessing I broke here" << endl;
+		//			return false;
+		//		}
+		//	}
 			//if (answerResults.size() > 0) {
 			//	if (tree[leftLocation].key >= answerResults.back()) {
 			//		cout << "i break in wrong location 2" << endl;
@@ -69,34 +73,70 @@ public:
 			//		return false;
 			//	}
 			//}
-		};
-		//inOrderTraversal(tree, tree[location].left);
+		/*}*/
+		inOrderTraversal(tree, tree[location].left);
+		long leftLocation = tree[location].left;
+		long rightLocation = tree[location].right;
+		long subLeftRightTree = tree[rightLocation].left;
+		if (answerResults.size() > 0) {
+			Node temp;
+			temp = answerResults.back();
+			if (tree[location].key < temp.key) {
+				return false;
+			}
+			else if (tree[location].key == temp.key) {;
+				if (leftLocation != -1) {
+					if (tree[leftLocation].key == tree[location].key) {
+						//cout << "I break here " << endl;
+						//cout << "Tree key " << tree[location].key << endl;
+						//cout << "Left Loc value " << tree[leftLocation].key << endl;
+						return false;
+					}
+				}
+				if (rightLocation != -1) {
+					if (tree[rightLocation].key < tree[location].key) {
+						//cout << "I break here 1" << endl;
+						//cout << "Tree key " << tree[location].key << endl;
+						//cout << "right Loc value " << tree[rightLocation].key << endl;
+						return false;
+					}
+				}
+			} /*else if (subLeftRightTree != -1) {
+				if (tree[location].key == tree[subLeftRightTree].key) {
+					return false;
+				}
+			}*/
+		}
+		answerResults.push_back(tree[location]);
 		//cout << "Answer results are " << answerResults.back() << endl;
+		//inOrderTraversal(tree, tree[location].left);
 		//cout << "Back of answerResults is " << answerResults.back() << endl;
 		//cout << "Right location " << tree[location].right << endl;
 		//inOrderTraversal(tree, tree[location].right);
-		long rightLocation = tree[location].right;
-		if (rightLocation != -1) {
-			if (tree[location].key > tree[rightLocation].key) {
-				//cout << "i break in wrong location 3" << endl;
-				return false;
-			}
-			//if (tree[location].key < answerResults.back()) {
-			//	cout << "i break in wrong location 4" << endl;
-			//	//cout << "I really shouldn't be here either" << endl;
-			//	cout << "Back of answerResults is " << answerResults.back() << endl;
-			//	cout << "Key in breaking point is " << tree[location].key << endl;
-			//	//cout << "Do I even make it here 3" << endl;
-			//	return false;
-			//}
-			if (tree[rightLocation].left != -1) {
-				if (tree[tree[rightLocation].left].key <= tree[0].key) {
-					//cout << "I break in wrong location 5" << endl;
-					return false;
-				}
-			}
-		}
-		return inOrderTraversal(tree, tree[location].left) and inOrderTraversal(tree, tree[location].right);
+		//long rightLocation = tree[location].right;
+		////cout << "Right location key" << tree[rightLocation].key << endl;
+
+		//if (rightLocation != -1) {
+		//	if (tree[location].key > tree[rightLocation].key) {
+		//		//cout << "i break in wrong location 3" << endl;
+		//		return false;
+		//	}
+		//	//if (tree[location].key < answerResults.back()) {
+		//	//	cout << "i break in wrong location 4" << endl;
+		//	//	//cout << "I really shouldn't be here either" << endl;
+		//	//	cout << "Back of answerResults is " << answerResults.back() << endl;
+		//	//	cout << "Key in breaking point is " << tree[location].key << endl;
+		//	//	//cout << "Do I even make it here 3" << endl;
+		//	//	return false;
+		//	//}
+		//	if (tree[rightLocation].left != -1) {
+		//		if (tree[tree[rightLocation].left].key <= tree[0].key) {
+		//			//cout << "I break in wrong location 5" << endl;
+		//			return false;
+		//		}
+		//	}
+		//}
+		inOrderTraversal(tree, tree[location].right);
 		//if (answerResults.back()) {
 		//	if (tree[rightLocation].key < answerResults.back()) {
 		//		return false;
@@ -144,7 +184,7 @@ int main_with_large_stack_space() {
 	}
 	vector<Node> tree;
 	for (int i = 0; i < nodes; ++i) {
-		int key, left, right;
+		long key, left, right;
 		cin >> key >> left >> right;
 		tree.push_back(Node(key, left, right));
 	}
@@ -173,7 +213,7 @@ int main(int argc, char **argv)
 			result = setrlimit(RLIMIT_STACK, &rl);
 			if (result != 0)
 			{
-				std::cerr << "setrlimit returned result = " << result << std::endl;
+				//std::cerr << "setrlimit returned result = " << result << std::endl;
 			}
 		}
 	}
